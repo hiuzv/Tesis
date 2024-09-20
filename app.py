@@ -3,16 +3,11 @@ from flask_cors import CORS
 import openai
 import os
 
-
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Habilitar CORS para toda la aplicación
 
-# Configura tu clave de API de OpenAI
+# Configurar la clave de la API de OpenAI desde las variables de entorno
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
-@app.route('/')
-def index():
-    return "Bienvenido al Chat Bot Educativo!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -23,16 +18,19 @@ def chat():
         return jsonify({"response": "Escribe algo para que te pueda ayudar."})
 
     try:
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # O el motor que prefieras
-            prompt=prompt,
-            max_tokens=150
+        # Usar el nuevo método de la API Chat completions
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Elige el modelo que prefieras, por ejemplo, "gpt-3.5-turbo"
+            messages=[
+                {"role": "system", "content": "Eres un asistente educativo."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        return jsonify({"response": response.choices[0].text.strip()})
+        return jsonify({"response": response['choices'][0]['message']['content']})
     except Exception as e:
+        # Registrar el error en los logs de Railway
         print(f"Error al conectarse con OpenAI: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API de ChatGPT: " + str(e)})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
-
