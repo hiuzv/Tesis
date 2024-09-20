@@ -18,12 +18,14 @@ def chat():
 
     try:
         # Usar el método anterior de la API completions
-        response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
-            prompt=prompt,
-            max_tokens=150
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Modelo más reciente para chats
+            messages=[
+                {"role": "system", "content": "Eres un asistente educativo."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        return jsonify({"response": response.choices[0].text.strip()})
+        return jsonify({"response": response['choices'][0]['message']['content']})
     except Exception as e:
         # Registrar el error en los logs de Railway
         print(f"Error al conectarse con OpenAI: {str(e)}")
