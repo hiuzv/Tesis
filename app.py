@@ -7,6 +7,7 @@ app = Flask(__name__)
 CORS(app)  # Habilitar CORS para toda la aplicación
 
 # Configurar la clave de la API de OpenAI desde las variables de entorno
+print(f"API Key: {os.getenv('OPENAI_API_KEY')}")
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 @app.route('/chat', methods=['POST'])
