@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal - Chat Bot Educativo</title>
+</head>
+<body>
+
+    <h1>Bienvenido a la Plataforma Educativa</h1>
+    <p>Haz clic en el botón para iniciar el chat educativo sobre minería de datos.</p>
+
+    <!-- Botón flotante de chat -->
+    <button id="chat-button">💬 Chat</button>
+
+    <!-- Script para abrir el chat en una nueva ventana -->
+    <script type="text/javascript">
+        document.getElementById("chat-button").addEventListener("click", function() {
+            // Abre una nueva ventana con el chat servido desde Flask
+            window.open("/chat", "ChatGPT", "width=400,height=600");
+        });
+    </script>
+
+</body>
+</html>
