@@ -1,13 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import openai
-import os
 
 app = Flask(__name__)
 CORS(app)  # Habilitar CORS para toda la aplicación
 
 # Configurar la clave de la API de OpenAI desde las variables de entorno
-print(f"API Key: {os.getenv('OPENAI_API_KEY')}")
 openai.api_key = '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'
 
 @app.route('/chat', methods=['POST'])
@@ -21,7 +19,7 @@ def chat():
     try:
         # Usar el método anterior de la API completions
         response = openai.Completion.create(
-            engine="text-davinci-003",  # O el motor que prefieras
+            engine="gpt-3.5-turbo",
             prompt=prompt,
             max_tokens=150
         )
