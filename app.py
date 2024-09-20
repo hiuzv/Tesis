@@ -8,8 +8,13 @@ CORS(app)  # Habilitar CORS para toda la aplicación
 # Configurar la clave de la API de OpenAI desde las variables de entorno
 openai.api_key = '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'
 
-@app.route('/chat', methods=['POST'])
+@app.route('/')
 def chat():
+    # Servir el archivo HTML del chat
+    return render_template('chat.html')
+
+@app.route('/chat', methods=['POST'])
+def chat_api():
     data = request.get_json()
     prompt = data.get("prompt").lower()
 
