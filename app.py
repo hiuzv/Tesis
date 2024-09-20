@@ -9,6 +9,11 @@ CORS(app)  # Habilitar CORS para toda la aplicación
 openai.api_key = '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'
 
 @app.route('/')
+def index():
+    # Página principal donde el usuario puede hacer clic en el botón de chat
+    return render_template('index.html')
+
+@app.route('/chat', methods=['GET'])
 def chat():
     # Servir el archivo HTML del chat
     return render_template('chat.html')
