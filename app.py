@@ -18,15 +18,13 @@ def chat():
         return jsonify({"response": "Escribe algo para que te pueda ayudar."})
 
     try:
-        # Usar el nuevo método de la API Chat completions
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Elige el modelo que prefieras, por ejemplo, "gpt-3.5-turbo"
-            messages=[
-                {"role": "system", "content": "Eres un asistente educativo."},
-                {"role": "user", "content": prompt}
-            ]
+        # Usar el método anterior de la API completions
+        response = openai.Completion.create(
+            engine="text-davinci-003",  # O el motor que prefieras
+            prompt=prompt,
+            max_tokens=150
         )
-        return jsonify({"response": response['choices'][0]['message']['content']})
+        return jsonify({"response": response.choices[0].text.strip()})
     except Exception as e:
         # Registrar el error en los logs de Railway
         print(f"Error al conectarse con OpenAI: {str(e)}")
