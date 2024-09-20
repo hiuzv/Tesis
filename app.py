@@ -18,7 +18,7 @@ def chat():
     # Servir el archivo HTML del chat
     return render_template('chat.html')
 
-@app.route('/chat', methods=['POST'])
+@app.route('/api/chat', methods=['POST'])
 def chat_api():
     data = request.get_json()
     prompt = data.get("prompt").lower()
