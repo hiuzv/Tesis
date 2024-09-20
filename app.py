@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
 import openai
-import os
+
 
 app = Flask(__name__)
 
 # Configura tu clave de API de OpenAI
 openai.api_key = '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'
+
+@app.route('/')
+def index():
+    return "Bienvenido al Chat Bot Educativo!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -26,5 +30,5 @@ def chat():
         return jsonify({"response": "Error al conectarse con la API de ChatGPT: " + str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080)
 
