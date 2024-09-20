@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import openai
+import os
 
 
 app = Flask(__name__)
+CORS(app)
 
 # Configura tu clave de API de OpenAI
-openai.api_key = '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'
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 @app.route('/')
 def index():
@@ -27,6 +30,7 @@ def chat():
         )
         return jsonify({"response": response.choices[0].text.strip()})
     except Exception as e:
+        print(f"Error al conectarse con OpenAI: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API de ChatGPT: " + str(e)})
 
 if __name__ == '__main__':
