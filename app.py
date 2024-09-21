@@ -22,7 +22,7 @@ def chat_api():
         response = openai.ChatCompletion.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Eres un asistente virtual educativo, para un curso de introduccion a la mineria de datos (Ciencia de datos), Solo puedes responder preguntas relacionadas con minería de datos (Ciencia de datos). Si te hacen preguntas sobre otro tema, responde que solo puedes hablar sobre temas relacionados al curso."},
+                {"role": "system", "content": "Eres un asistente virtual educativo, experto en enseñar temas sobre un curso de introduccion a la mineria de datos (Ciencia de datos) con python, Solo debes responder preguntas relacionadas con minería de datos (Ciencia de datos) con python. Si te hacen preguntas sobre otro tema, responde que solo debes hablar sobre temas relacionados al curso."},
                 {"role": "user", "content": prompt}
             ]
         )
