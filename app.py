@@ -20,7 +20,7 @@ def chat_api():
     try:
         # Dar una instrucción explícita al modelo para que solo hable de minería de datos
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "Eres un asistente virtual educativo, para un curso de introduccion a la mineria de datos (Ciencia de datos), Solo puedes responder preguntas relacionadas con minería de datos (Ciencia de datos). Si te hacen preguntas sobre otro tema, responde que solo puedes hablar sobre temas relacionados al curso."},
                 {"role": "user", "content": prompt}
