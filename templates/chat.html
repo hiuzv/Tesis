@@ -87,6 +87,17 @@
             cursor: pointer;
             margin-left: 10px;
         }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: "Courier New", Courier, monospace;
+        }
     </style>
 </head>
 <body>
@@ -129,10 +140,10 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Añadir respuesta del bot al chat
-                var botMessage = document.createElement("p");
+                // Añadir respuesta del bot al chat como HTML
+                var botMessage = document.createElement("div");
                 botMessage.classList.add("bot-message", "message");
-                botMessage.textContent = data.response;
+                botMessage.innerHTML = data.response;  // Usamos innerHTML para interpretar etiquetas <pre><code>
                 document.getElementById("chat-log").appendChild(botMessage);
             })
             .catch(error => {
