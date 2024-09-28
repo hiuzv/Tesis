@@ -93,10 +93,28 @@
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
+            position: relative;
         }
 
         code {
             font-family: "Courier New", Courier, monospace;
+        }
+
+        /* Botón copiar código */
+        .copy-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #000066;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-button:hover {
+            background-color: #333399;
         }
     </style>
 </head>
@@ -143,7 +161,29 @@
                 // Añadir respuesta del bot al chat como HTML
                 var botMessage = document.createElement("div");
                 botMessage.classList.add("bot-message", "message");
-                botMessage.innerHTML = data.response;  // Usamos innerHTML para interpretar etiquetas <pre><code>
+                botMessage.innerHTML = data.response;
+
+                // Si la respuesta contiene bloques <pre><code>, añade botón de copiar
+                botMessage.querySelectorAll('pre code').forEach(function(block) {
+                    // Crear botón de copiar
+                    var copyButton = document.createElement("button");
+                    copyButton.classList.add("copy-button");
+                    copyButton.textContent = "Copiar";
+                    copyButton.addEventListener("click", function() {
+                        // Copiar el contenido del código al portapapeles
+                        var codeText = block.textContent;
+                        navigator.clipboard.writeText(codeText).then(function() {
+                            alert("Código copiado al portapapeles");
+                        }).catch(function(err) {
+                            console.error("Error al copiar el código: ", err);
+                        });
+                    });
+
+                    // Insertar el botón dentro del bloque <pre>
+                    block.parentNode.style.position = 'relative'; // Asegurar que el botón se posicione correctamente
+                    block.parentNode.appendChild(copyButton);
+                });
+
                 document.getElementById("chat-log").appendChild(botMessage);
             })
             .catch(error => {
