@@ -51,5 +51,5 @@ def chat_api():
         print(f"Error al conectarse con OpenAI o Bing: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API: " + str(e)})
 
-if _name_ == "_main_":
+if _name_ == "__main__":
     app.run(host='0.0.0.0',port=8080)
