@@ -48,17 +48,15 @@ def chat_api():
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "Eres un asistente virtual educativo, experto en enseñar temas sobre un curso de introduccion a la mineria de datos (Ciencia de datos) con python, Solo debes responder preguntas relacionadas con minería de datos (Ciencia de datos) con python. Si te hacen preguntas sobre otro tema, responde que solo debes hablar sobre temas relacionados al curso, pueden pedirte mejoras de codigo o seguir una conversación anterior, si te solicitan código, devuélvelo dentro de las etiquetas <pre><code> para que se visualice correctamente en HTML, tambien Utiliza el contexto de la web proporcionado para mejorar tus respuestas."},
-                {"role": "user", "content": gpt_prompt},
-                conversation_history
-            ]
+                {"role": "system", "content": "Eres un asistente virtual educativo, experto en enseñar temas sobre un curso de introduccion a la mineria de datos (Ciencia de datos) con python, Solo debes responder preguntas relacionadas con minería de datos (Ciencia de datos) con python. Si te hacen preguntas sobre otro tema, responde que solo debes hablar sobre temas relacionados al curso, pueden pedirte mejoras de codigo o seguir una conversación anterior, si te solicitan código, devuélvelo dentro de las etiquetas <pre><code> para que se visualice correctamente en HTML, tambien Utiliza el contexto de la web proporcionado para mejorar tus respuestas."}
+            ] + conversation_history
         )
 
         assistant_response = response['choices'][0]['message']['content']
         conversation_history.append({"role": "assistant", "content": assistant_response})
 
         return jsonify({"response": assistant_response})
-        
+
     except Exception as e:
         print(f"Error al conectarse con OpenAI o Bing: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API: " + str(e)})
