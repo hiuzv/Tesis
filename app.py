@@ -75,7 +75,7 @@ def chat_api():
                                                 "7. No proporcionas respuestas si el contexto no está relacionado con minería de datos o Python. En ese caso, menciona la restricción del curso.\n\n"
                                                 "Sigue estas reglas al responder cada pregunta."},
                 {"role": "user", "content": prompt}
-            ] + recent_history)
+            ] + join(recent_history))
 
         assistant_response = response['choices'][0]['message']['content']
         conversation_history.append({"role": "assistant", "content": assistant_response})
