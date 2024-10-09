@@ -148,6 +148,12 @@
             document.getElementById("chat-log").appendChild(userMessage);
             document.getElementById("chat-input").value = "";
 
+            // Añadir indicador de "Escribiendo..."
+            var typingIndicator = document.createElement("p");
+            typingIndicator.classList.add("bot-message", "message");
+            typingIndicator.textContent = "Escribiendo...";
+            document.getElementById("chat-log").appendChild(typingIndicator);
+
             // Hacer la petición a la API de Flask
             fetch("https://web-production-67b6d.up.railway.app/chat", {
                 method: "POST",
@@ -158,6 +164,9 @@
             })
             .then(response => response.json())
             .then(data => {
+            // Remover el indicador de "Escribiendo..."
+            typingIndicator.remove();
+
                 // Añadir respuesta del bot al chat como HTML
                 var botMessage = document.createElement("div");
                 botMessage.classList.add("bot-message", "message");
@@ -187,6 +196,7 @@
                 document.getElementById("chat-log").appendChild(botMessage);
             })
             .catch(error => {
+                typingIndicator.remove(); // Remover el indicador de "Escribiendo..." si ocurre un error
                 var errorMessage = document.createElement("p");
                 errorMessage.classList.add("bot-message", "message");
                 errorMessage.textContent = "Error en la conexión.";
