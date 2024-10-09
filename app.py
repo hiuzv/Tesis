@@ -24,6 +24,8 @@ def search_web(query):
     if "webPages" in search_results:
         for page in search_results["webPages"]["value"]:
             results.append(page["snippet"])
+
+    print(results)
     return " ".join(results)
 
 @app.route('/', methods=['GET'])
