@@ -33,12 +33,14 @@ def chat():
 @app.route('/chat', methods=['POST'])
 def chat_api():
     global conversation_history
+    MAX_HISTORY = 10
     data = request.get_json()
     prompt = data.get("prompt").lower()
 
     try:
         web_data = search_web(prompt)
         gpt_prompt = f"Contexto de la búsqueda en la web: {web_data}. Pregunta del usuario: {prompt}"
+        recent_history = conversation_history[-MAX_HISTORY:]
 
         response = openai.ChatCompletion.create(
             model="gpt-4o-mini",
@@ -54,7 +56,7 @@ def chat_api():
                                                 "7. No proporcionas respuestas si el contexto no está relacionado con minería de datos o Python. En ese caso, menciona la restricción del curso.\n\n"
                                                 "Sigue estas reglas al responder cada pregunta."},
                 {"role": "user", "content": prompt}
-            ] + conversation_history
+            ] + recent_history
         )
 
         assistant_response = response['choices'][0]['message']['content']
