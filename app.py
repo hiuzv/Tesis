@@ -24,8 +24,6 @@ def search_web(query):
     if "webPages" in search_results:
         for page in search_results["webPages"]["value"]:
             results.append(page["snippet"])
-
-    print(results)
     return " ".join(results)
 
 @app.route('/', methods=['GET'])
@@ -64,6 +62,20 @@ def chat_api():
                 {"role": "user", "content": prompt}
             ] + recent_history
         )
+
+        print("PREGUNTA: "+[
+                {"role": "system", "content": f"Eres un asistente virtual educativo, especializado en enseñar un curso de introducción a la minería de datos (ciencia de datos) con Python. "
+                                                "A continuación se detallan las reglas que debes seguir estrictamente en cada respuesta:\n"
+                                                "1. Solo puedes responder preguntas relacionadas con minería de datos (ciencia de datos) con Python.\n"
+                                                "2. Si te hacen preguntas sobre otros temas no relacionados, responde diciendo: 'Solo puedo responder preguntas sobre minería de datos con Python.'\n"
+                                                "3. Si te piden generar o mejorar código, debes devolverlo estrictamente dentro de las etiquetas <pre><code> y </code></pre> para que se visualice correctamente en HTML.\n"
+                                                "4. Si te piden generar o mejorar código, debe ser estrictamente relacionado con un tema del curso.\n"
+                                                "5. Si te solicitan una mejora de código, asegúrate de mejorar el código proporcionado en lugar de generar un código completamente diferente.\n"
+                                                "6. Siempre debes usar el contexto de la búsqueda en la web proporcionado para mejorar la calidad de tus respuestas.\n"
+                                                "7. No proporcionas respuestas si el contexto no está relacionado con minería de datos o Python. En ese caso, menciona la restricción del curso.\n\n"
+                                                "Sigue estas reglas al responder cada pregunta."},
+                {"role": "user", "content": prompt}
+            ] + recent_history)
 
         assistant_response = response['choices'][0]['message']['content']
         conversation_history.append({"role": "assistant", "content": assistant_response})
