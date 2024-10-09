@@ -62,7 +62,7 @@ def chat_api():
         assistant_response = response['choices'][0]['message']['content']
 
         conversation_history.append("Pregunta anterior, solo usar a modo de historial:" + prompt)
-        conversation_history.append("Respuesta anterior, solo usar a modo de historial:" + assistant_response})
+        conversation_history.append("Respuesta anterior, solo usar a modo de historial:" + assistant_response)
 
         return jsonify({"response": assistant_response})
 
