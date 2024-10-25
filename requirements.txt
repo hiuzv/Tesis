@@ -2,3 +2,4 @@ Flask
 gunicorn
 flask-cors
 openai==0.28.0
+psycopg2==2.9.1

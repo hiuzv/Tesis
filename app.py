@@ -1,7 +1,9 @@
-import requests
+import psycopg2
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import openai
+import uuid  # Para generar user_id únicos
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -26,22 +28,48 @@ def search_web(query):
             results.append(page["snippet"])
     return " ".join(results)
 
+# Conexión a la base de datos PostgreSQL
+def get_db_connection():
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+    return conn
+
+# Función para recuperar el historial del usuario
+def get_user_history(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT role, message FROM chat_history WHERE user_id = %s ORDER BY timestamp', (user_id,))
+    history = cursor.fetchall()
+    conn.close()
+    return [{"role": row[0], "content": row[1]} for row in history]
+
+# Función para guardar el historial
+def save_message(user_id, role, message):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO chat_history (user_id, role, message) VALUES (%s, %s, %s)', (user_id, role, message))
+    conn.commit()
+    conn.close()
+
 @app.route('/', methods=['GET'])
 def chat():
     return render_template('chat.html')
 
 @app.route('/chat', methods=['POST'])
 def chat_api():
-    global conversation_history
-    MAX_HISTORY = 6
     data = request.get_json()
+
+    # Recupera el user_id, si no existe uno, genera uno nuevo
+    user_id = data.get("user_id") or str(uuid.uuid4())
     prompt = data.get("prompt").lower()
 
     try:
         web_data = search_web(prompt)
         gpt_prompt = f"Contexto de la búsqueda en la web: {web_data}. Pregunta del usuario: {prompt}"
-        recent_history = conversation_history[-MAX_HISTORY:]
+               
+        # Recuperar historial previo
+        conversation_history = get_user_history(user_id)
 
+        # Llamada a OpenAI
         response = openai.ChatCompletion.create(
             model="gpt-4o-mini",
             messages=[
@@ -55,22 +83,22 @@ def chat_api():
                                                 "6. Debes usar el contexto de la búsqueda en la web proporcionado para mejorar la calidad de tus respuestas.\n"
                                                 "7. No proporcionas respuestas si el contexto no está relacionado con minería de datos (ciencia de datos) y/o codigo en Python. En ese caso, menciona la restricción del curso.\n"
                                                 "8. Debes dar respuesta a la 'Pregunta del usuario', usando las reglas, el 'Contexto de la búsqueda en la web' y las preguntas y respues historial.\n\n"
-                                                "Sigue estas reglas al responder cada pregunta."}] + recent_history + [
+                                                "Sigue estas reglas al responder cada pregunta."}] + conversation_history + [
                 {"role": "user", "content": gpt_prompt}
             ]
         )
 
         assistant_response = response['choices'][0]['message']['content']
 
-        conversation_history.append({"role": "user", "content": "Pregunta anterior, solo usar a modo de historial: " + prompt})
-        conversation_history.append({"role": "assistant", "content": "Respuesta anterior, solo usar a modo de historial: " + assistant_response})
+        # Guardar los mensajes del usuario y del asistente
+        save_message(user_id, "user", prompt)
+        save_message(user_id, "assistant", assistant_response)
 
-
-        return jsonify({"response": assistant_response})
+        return jsonify({"response": assistant_response, "user_id": user_id})
 
     except Exception as e:
-        print(f"Error al conectarse con OpenAI o Bing: {str(e)}")
+        print(f"Error: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API: " + str(e)})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=8080)
+    app.run(host='0.0.0.0', port=8080)
