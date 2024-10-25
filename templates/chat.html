@@ -120,17 +120,11 @@
 
         /* Botones de Like/Dislike */
         .like-button, .dislike-button {
-            background-color: #000066;
-            color: white;
+            background-color: transparent;
             border: none;
-            padding: 5px 10px;
             cursor: pointer;
+            font-size: 16px;
             margin-left: 5px;
-            font-size: 12px;
-        }
-
-        .like-button:hover, .dislike-button:hover {
-            background-color: #333399;
         }
 
         .like-dislike-container {
@@ -138,6 +132,11 @@
             bottom: 5px;
             right: 5px;
             display: flex;
+        }
+
+        .like-button img, .dislike-button img {
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -199,21 +198,19 @@
                 var likeDislikeContainer = document.createElement("div");
                 likeDislikeContainer.classList.add("like-dislike-container");
 
-                // Crear botón de Like
+                // Crear botón de Like con icono
                 var likeButton = document.createElement("button");
                 likeButton.classList.add("like-button");
-                likeButton.textContent = "Like";
-                likeButton.addEventListener("click", function() {
-                    alert("Le diste like a esta respuesta");
-                });
+                var likeIcon = document.createElement("img");
+                likeIcon.src = "/images/like.png"; // Update with the correct path to your like icon
+                likeButton.appendChild(likeIcon);
 
-                // Crear botón de Dislike
+                // Crear botón de Dislike con icono
                 var dislikeButton = document.createElement("button");
                 dislikeButton.classList.add("dislike-button");
-                dislikeButton.textContent = "Dislike";
-                dislikeButton.addEventListener("click", function() {
-                    alert("Le diste dislike a esta respuesta");
-                });
+                var dislikeIcon = document.createElement("img");
+                dislikeIcon.src = "/images/dislike.png"; // Update with the correct path to your dislike icon
+                dislikeButton.appendChild(dislikeIcon);
 
                 // Añadir los botones al contenedor
                 likeDislikeContainer.appendChild(likeButton);
