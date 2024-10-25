@@ -204,6 +204,9 @@
                 var likeIcon = document.createElement("img");
                 likeIcon.src = "/static/images/like.png"
                 likeButton.appendChild(likeIcon);
+                likeButton.addEventListener("click", function() {
+                    sendFeedback('like');
+                });
 
                 // Crear botón de Dislike con icono
                 var dislikeButton = document.createElement("button");
@@ -211,6 +214,28 @@
                 var dislikeIcon = document.createElement("img");
                 dislikeIcon.src = "/static/images/dislike.png"
                 dislikeButton.appendChild(dislikeIcon);
+                dislikeButton.addEventListener("click", function() {
+                    sendFeedback('dislike');
+                });
+
+                function sendFeedback(feedback) {
+                    fetch("/feedback", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({feedback: feedback })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status != "success") {
+                            alert("Error al guardar el feedback: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
 
                 // Añadir los botones al contenedor
                 likeDislikeContainer.appendChild(likeButton);

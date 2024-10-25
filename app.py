@@ -39,6 +39,13 @@ def get_db_connection():
     )
     return conn
 
+# Función para guardar el feedback
+def save_feedback(user_ip, feedback):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO user_feedback (user_ip, feedback) VALUES (%s, %s)', (user_ip, feedback))
+    conn.commit()
+    conn.close()
 
 # Función para recuperar el historial del usuario
 def get_user_history(user_ip):
@@ -106,6 +113,18 @@ def chat_api():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({"response": "Error al conectarse con la API: " + str(e)})
+
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    data = request.get_json()
+    feedback = data.get('feedback')  # 'like' o 'dislike'
+    user_ip = request.remote_addr
+
+    try:
+        save_feedback(user_ip, feedback)
+        return jsonify({"status": "success", "message": "Feedback saved"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
