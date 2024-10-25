@@ -34,7 +34,7 @@ def get_db_connection():
     return conn
 
 # Función para recuperar el historial del usuario
-def get_user_history(user_id):
+def get_user_history(user_ip):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT role, message FROM chat_history WHERE user_id = %s ORDER BY timestamp', (user_ip,))
@@ -43,7 +43,7 @@ def get_user_history(user_id):
     return [{"role": row[0], "content": row[1]} for row in history]
 
 # Función para guardar el historial
-def save_message(user_id, role, message):
+def save_message(user_ip, role, message):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('INSERT INTO chat_history (user_id, role, message) VALUES (%s, %s, %s)', (user_ip, role, message))
@@ -58,7 +58,7 @@ def chat():
 def chat_api():
     data = request.get_json()
 
-    # Recupera el user_id, si no existe uno, genera uno nuevo
+    # Recupera el user_ip, si no existe uno, genera uno nuevo
     user_ip = request.remote_addr
     prompt = data.get("prompt").lower()
 
@@ -67,7 +67,7 @@ def chat_api():
         gpt_prompt = f"Contexto de la búsqueda en la web: {web_data}. Pregunta del usuario: {prompt}"
                
         # Recuperar historial previo
-        conversation_history = get_user_history(user_id)
+        conversation_history = get_user_history(user_ip)
 
         # Llamada a OpenAI
         response = openai.ChatCompletion.create(
