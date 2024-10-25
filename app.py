@@ -1,9 +1,8 @@
-import pg8000
-import requests
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import pg8000
+import requests
 import openai
-import uuid  # Para generar user_id únicos
 import os
 
 app = Flask(__name__)
@@ -60,7 +59,7 @@ def chat_api():
     data = request.get_json()
 
     # Recupera el user_id, si no existe uno, genera uno nuevo
-    user_id = data.get("user_id") or str(uuid.uuid4())
+    user_ip = request.remote_addr
     prompt = data.get("prompt").lower()
 
     try:
