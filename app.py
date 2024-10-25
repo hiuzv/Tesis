@@ -30,7 +30,7 @@ def search_web(query):
 
 # Conexión a la base de datos PostgreSQL
 def get_db_connection():
-    conn = psycopg2.connect(os.getenv('postgresql://postgres:SWGblPkwOyrUuDjxvWsCpPOBhzZOYaOC@postgres.railway.internal:5432/railway'))
+    conn = pg8000.connect(os.getenv('postgresql://postgres:SWGblPkwOyrUuDjxvWsCpPOBhzZOYaOC@postgres.railway.internal:5432/railway'))
     return conn
 
 # Función para recuperar el historial del usuario
