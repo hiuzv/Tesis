@@ -30,7 +30,9 @@ def search_web(query):
 
 # Conexión a la base de datos PostgreSQL
 def get_db_connection():
-    conn = pg8000.connect(os.getenv('DATABASE_URL'))
+    database_url = os.getenv('DATABASE_URL')
+    print("DATABASE_URL:", database_url)  # Esto imprimirá la URL en los registros
+    conn = pg8000.connect(database_url)
     return conn
 
 # Función para recuperar el historial del usuario
