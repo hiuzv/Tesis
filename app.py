@@ -37,7 +37,7 @@ def get_db_connection():
 def get_user_history(user_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT role, message FROM chat_history WHERE user_id = %s ORDER BY timestamp', (user_id,))
+    cursor.execute('SELECT role, message FROM chat_history WHERE user_id = %s ORDER BY timestamp', (user_ip,))
     history = cursor.fetchall()
     conn.close()
     return [{"role": row[0], "content": row[1]} for row in history]
@@ -46,7 +46,7 @@ def get_user_history(user_id):
 def save_message(user_id, role, message):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO chat_history (user_id, role, message) VALUES (%s, %s, %s)', (user_id, role, message))
+    cursor.execute('INSERT INTO chat_history (user_id, role, message) VALUES (%s, %s, %s)', (user_ip, role, message))
     conn.commit()
     conn.close()
 
