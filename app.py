@@ -1,4 +1,4 @@
-import psycopg2-binary
+import pg8000
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import openai
