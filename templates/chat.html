@@ -202,14 +202,14 @@
                 var likeButton = document.createElement("button");
                 likeButton.classList.add("like-button");
                 var likeIcon = document.createElement("img");
-                likeIcon.src = "/images/like.png"; // Update with the correct path to your like icon
+                likeIcon.src = <img src="/static/images/like.png" alt="Like" />
                 likeButton.appendChild(likeIcon);
 
                 // Crear botón de Dislike con icono
                 var dislikeButton = document.createElement("button");
                 dislikeButton.classList.add("dislike-button");
                 var dislikeIcon = document.createElement("img");
-                dislikeIcon.src = "/images/dislike.png"; // Update with the correct path to your dislike icon
+                dislikeIcon.src = <img src="/static/images/dislike.png" alt="Dislike" />
                 dislikeButton.appendChild(dislikeIcon);
 
                 // Añadir los botones al contenedor

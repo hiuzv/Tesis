@@ -14,7 +14,7 @@ conversation_history = []
 def search_web(query):
     search_url = "https://api.bing.microsoft.com/v7.0/search"
     headers = {"Ocp-Apim-Subscription-Key": bing_api_key}
-    params = {"q": query, "count": 10, "textDecorations": True, "textFormat": "HTML"}
+    params = {"q": query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
     
     response = requests.get(search_url, headers=headers, params=params)
     response.raise_for_status()
@@ -33,7 +33,7 @@ def chat():
 @app.route('/chat', methods=['POST'])
 def chat_api():
     global conversation_history
-    MAX_HISTORY = 10
+    MAX_HISTORY = 6
     data = request.get_json()
     prompt = data.get("prompt").lower()
 
