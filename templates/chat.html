@@ -65,6 +65,7 @@
         .bot-message {
             background-color: #f4f4f4;
             align-self: flex-end;
+            position: relative;
         }
 
         .chat-footer {
@@ -116,6 +117,28 @@
         .copy-button:hover {
             background-color: #333399;
         }
+
+        /* Botones de Like/Dislike */
+        .like-button, .dislike-button {
+            background-color: #000066;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        .like-button:hover, .dislike-button:hover {
+            background-color: #333399;
+        }
+
+        .like-dislike-container {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -164,13 +187,42 @@
             })
             .then(response => response.json())
             .then(data => {
-            // Remover el indicador de "Escribiendo..."
-            typingIndicator.remove();
+                // Remover el indicador de "Escribiendo..."
+                typingIndicator.remove();
 
                 // Añadir respuesta del bot al chat como HTML
                 var botMessage = document.createElement("div");
                 botMessage.classList.add("bot-message", "message");
                 botMessage.innerHTML = data.response;
+
+                // Crear contenedor para botones de like y dislike
+                var likeDislikeContainer = document.createElement("div");
+                likeDislikeContainer.classList.add("like-dislike-container");
+
+                // Crear botón de Like
+                var likeButton = document.createElement("button");
+                likeButton.classList.add("like-button");
+                likeButton.textContent = "Like";
+                likeButton.addEventListener("click", function() {
+                    alert("Le diste like a esta respuesta");
+                });
+
+                // Crear botón de Dislike
+                var dislikeButton = document.createElement("button");
+                dislikeButton.classList.add("dislike-button");
+                dislikeButton.textContent = "Dislike";
+                dislikeButton.addEventListener("click", function() {
+                    alert("Le diste dislike a esta respuesta");
+                });
+
+                // Añadir los botones al contenedor
+                likeDislikeContainer.appendChild(likeButton);
+                likeDislikeContainer.appendChild(dislikeButton);
+
+                // Añadir el contenedor de botones a la respuesta del bot
+                botMessage.appendChild(likeDislikeContainer);
+
+                document.getElementById("chat-log").appendChild(botMessage);
 
                 // Si la respuesta contiene bloques <pre><code>, añade botón de copiar
                 botMessage.querySelectorAll('pre code').forEach(function(block) {
@@ -193,7 +245,6 @@
                     block.parentNode.appendChild(copyButton);
                 });
 
-                document.getElementById("chat-log").appendChild(botMessage);
             })
             .catch(error => {
                 typingIndicator.remove(); // Remover el indicador de "Escribiendo..." si ocurre un error
