@@ -65,7 +65,7 @@ def save_message(user_ip, role, message):
     conn.close()
 
 @app.route('/', methods=['GET'])
-def chat():
+def chat(user_id):
     return render_template('chat.html')
 
 @app.route('/chat', methods=['POST'])
