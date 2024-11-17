@@ -65,7 +65,7 @@ def save_message(user_ip, user_name, role, message):
     conn.close()
 
 @app.route('/', methods=['GET'])
-def chat(user_id):
+def chat():
     return render_template('chat.html')
 
 @app.route('/chat', methods=['POST'])
@@ -75,7 +75,7 @@ def chat_api():
     # Recupera el user_ip, si no existe uno, genera uno nuevo
     user_name = data.get("user", "Invitado")
     user_ip = request.remote_addr
-    prompt = data.get("prompt", "").strip().lower()
+    prompt = data.get("prompt").lower()
 
     try:
         # Contexto de la búsqueda en la web
