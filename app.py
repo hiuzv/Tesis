@@ -48,19 +48,19 @@ def save_feedback(user_ip, feedback):
     conn.close()
 
 # Función para recuperar el historial del usuario
-def get_user_history(user_ip):
+def get_user_history(user_ip,user_name):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT role, message FROM chat_history_ip WHERE user_id = %s ORDER BY timestamp', (user_ip,))
+    cursor.execute('SELECT role, message FROM chat_history_ip WHERE user_id = %s and user_name = %s ORDER BY timestamp', (user_ip,user_name))
     history = cursor.fetchall()
     conn.close()
     return [{"role": row[0], "content": row[1]} for row in history]
 
 # Función para guardar el historial
-def save_message(user_ip, role, message):
+def save_message(user_ip, user_name, role, message):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO chat_history_ip (user_id, role, message) VALUES (%s, %s, %s)', (user_ip, role, message))
+    cursor.execute('INSERT INTO chat_history_ip (user_id, user_name, role, message) VALUES (%s, %s, %s, %s)', (user_ip, user_name, role, message))
     conn.commit()
     conn.close()
 
@@ -73,10 +73,12 @@ def chat_api():
     data = request.get_json()
 
     # Recupera el user_ip, si no existe uno, genera uno nuevo
+    user_name = data.get("user", "Invitado")
     user_ip = request.remote_addr
-    prompt = data.get("prompt").lower()
+    prompt = data.get("prompt", "").strip().lower()
 
     try:
+        # Contexto de la búsqueda en la web
         web_data = search_web(prompt)
         gpt_prompt = f"Contexto de la búsqueda en la web: {web_data}. Pregunta del usuario: {prompt}"
                
@@ -105,14 +107,14 @@ def chat_api():
         assistant_response = response['choices'][0]['message']['content']
 
         # Guardar los mensajes del usuario y del asistente
-        save_message(user_ip, "user", prompt)
-        save_message(user_ip, "assistant", assistant_response)
+        save_message(user_ip, user_name, "user", prompt)
+        save_message(user_ip, user_name, "assistant", assistant_response)
 
         return jsonify({"response": assistant_response, "user_ip": user_ip})
 
     except Exception as e:
         print(f"Error: {str(e)}")
-        return jsonify({"response": "Error al conectarse con la API: " + str(e)})
+        return jsonify({"response": f"Error al conectarse con la API: {str(e)}", "user_ip": user_ip})
 
 @app.route('/feedback', methods=['POST'])
 def feedback():

@@ -175,6 +175,9 @@
             typingIndicator.classList.add("bot-message", "message");
             typingIndicator.textContent = "Escribiendo...";
             document.getElementById("chat-log").appendChild(typingIndicator);
+            
+            // Aquí se obtiene el nombre del usuario de la URL de la ventana emergente
+            var userName = new URLSearchParams(window.location.search).get('user') || "Invitado";
 
             // Hacer la petición a la API de Flask
             fetch("https://web-production-67b6d.up.railway.app/chat", {
