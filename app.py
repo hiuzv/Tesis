@@ -14,20 +14,25 @@ bing_api_key = '84d3848e78af409095cb546430d9b8af'
 conversation_history = []
 
 def search_web(query):
-    #search_url = "https://api.bing.microsoft.com/v7.0/search"
-    search_url = "https://api.bing.microsoft.com/"
+    search_url = "https://api.bing.microsoft.com/v7.0/search"
     headers = {"Ocp-Apim-Subscription-Key": bing_api_key}
     params = {"q": query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
     
-    response = requests.get(search_url, headers=headers, params=params)
-    response.raise_for_status()
-    search_results = response.json()
-    
-    results = []
-    if "webPages" in search_results:
-        for page in search_results["webPages"]["value"]:
-            results.append(page["snippet"])
-    return " ".join(results)
+    try:
+        response = requests.get(search_url, headers=headers, params=params)
+        response.raise_for_status()
+        search_results = response.json()
+        
+        results = []
+        if "webPages" in search_results:
+            for page in search_results["webPages"]["value"]:
+                results.append(page["snippet"])
+        return " ".join(results)
+        
+    except requests.exceptions.RequestException as e:
+        # Captura cualquier error relacionado con la solicitud
+        print(f"Error al conectarse a Bing: {e}")
+        return "No se pudo obtener el contexto de búsqueda en este momento."
 
 # Conexión a la base de datos PostgreSQL
 def get_db_connection():
