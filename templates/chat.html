@@ -175,9 +175,6 @@
             typingIndicator.classList.add("bot-message", "message");
             typingIndicator.textContent = "Escribiendo...";
             document.getElementById("chat-log").appendChild(typingIndicator);
-            
-            // Aquí se obtiene el nombre del usuario de la URL de la ventana emergente
-            var userName = new URLSearchParams(window.location.search).get('user') || "Invitado";
 
             // Hacer la petición a la API de Flask
             fetch("https://web-production-67b6d.up.railway.app/chat", {
@@ -205,66 +202,43 @@
                 // Crear botón de Like con icono
                 var likeButton = document.createElement("button");
                 likeButton.classList.add("like-button");
-                likeButton.textContent = "👍";
-                likeButton.addEventListener("click", function () {
-                    sendFeedback(botMessage.getAttribute("data-id"), 'like'); // Enviar el ID específico
-                });
-                /*var likeIcon = document.createElement("img");
+                var likeIcon = document.createElement("img");
                 likeIcon.src = "/static/images/like.png"
                 likeButton.appendChild(likeIcon);
                 likeButton.addEventListener("click", function() {
                     sendFeedback('like');
-                });*/
+                });
 
                 // Crear botón de Dislike con icono
                 var dislikeButton = document.createElement("button");
                 dislikeButton.classList.add("dislike-button");
-                dislikeButton.textContent = "👎";
-                dislikeButton.addEventListener("click", function () {
-                    sendFeedback(botMessage.getAttribute("data-id"), 'dislike'); // Enviar el ID específico
-                });
-                /*var dislikeIcon = document.createElement("img");
+                var dislikeIcon = document.createElement("img");
                 dislikeIcon.src = "/static/images/dislike.png"
                 dislikeButton.appendChild(dislikeIcon);
                 dislikeButton.addEventListener("click", function() {
                     sendFeedback('dislike');
-                });*/
+                });
 
-                likeDislikeContainer.appendChild(likeButton);
-                likeDislikeContainer.appendChild(dislikeButton);
-                botMessage.appendChild(likeDislikeContainer);
-
-                document.getElementById("chat-log").appendChild(botMessage);
-            })
-            .catch(error => {
-                typingIndicator.remove();
-                var errorMessage = document.createElement("p");
-                errorMessage.classList.add("bot-message", "message");
-                errorMessage.textContent = "Error en la conexión.";
-                document.getElementById("chat-log").appendChild(errorMessage);
-            });
-        });
-
-        function sendFeedback(feedback) {
-            fetch("/feedback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({feedback: feedback })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status != "success") {
-                    alert("Error al guardar el feedback: " + data.message);
+                function sendFeedback(feedback) {
+                    fetch("/feedback", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({feedback: feedback })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status != "success") {
+                            alert("Error al guardar el feedback: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
                 }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-        }
 
-/*                // Añadir los botones al contenedor
+                // Añadir los botones al contenedor
                 likeDislikeContainer.appendChild(likeButton);
                 likeDislikeContainer.appendChild(dislikeButton);
 
@@ -303,7 +277,7 @@
                 document.getElementById("chat-log").appendChild(errorMessage);
             });
         });
-*/
+
         // Enviar mensaje con la tecla Enter
         document.getElementById("chat-input").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
