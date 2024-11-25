@@ -14,7 +14,8 @@ bing_api_key = '84d3848e78af409095cb546430d9b8af'
 conversation_history = []
 
 def search_web(query):
-    search_url = "https://api.bing.microsoft.com/v7.0/search"
+    #search_url = "https://api.bing.microsoft.com/v7.0/search"
+    search_url = "https://api.bing.microsoft.com/"
     headers = {"Ocp-Apim-Subscription-Key": bing_api_key}
     params = {"q": query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
     
