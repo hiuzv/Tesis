@@ -3,3 +3,4 @@ gunicorn
 flask-cors
 openai==0.28.0
 pg8000==1.19.5
+setuptools
