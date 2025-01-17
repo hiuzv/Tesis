@@ -46,7 +46,7 @@ def get_db_connection():
     return conn
 
 # Función para guardar el feedback
-def save_feedback(user_ip, feedback):
+def save_feedback(user_ip, feedback, message_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('INSERT INTO user_feedback (user_ip, feedback, message_id) VALUES (%s, %s, %s)', (user_ip, feedback, message_id))
