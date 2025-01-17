@@ -130,21 +130,28 @@ def chat_api():
 
 def format_response_as_html(response_text):
     """
-    Convierte Markdown o texto estructurado en HTML para el frontend.
+    Convierte texto con formato Markdown en HTML.
     """
     import re
 
     # Convertir encabezados de nivel 3 (###) en etiquetas <h3>
     response_text = re.sub(r'### (.+)', r'<h3>\1</h3>', response_text)
 
-    # Convertir listas numeradas (1., 2., etc.) en <ol> y <li>
-    response_text = re.sub(r'(\d+)\.\s(.+)', r'<li>\2</li>', response_text)
-    response_text = re.sub(r'(<li>.*?</li>)', r'<ol>\1</ol>', response_text, flags=re.DOTALL)
+    # Convertir listas numeradas en <ol> y <li>
+    def replace_numbered_list(match):
+        items = match.group(0).split('\n')
+        items = [f"<li>{item[2:].strip()}</li>" for item in items if item.strip()]
+        return f"<ol>{''.join(items)}</ol>"
 
-    # Convertir texto en **negrita** y *itálica*
-    response_text = response_text.replace('**', '<b>').replace('*', '<i>')
+    response_text = re.sub(r'(\d+\.\s.+(\n|$))+', replace_numbered_list, response_text)
 
-    # Reemplazar saltos de línea por <br> (opcional)
+    # Convertir texto en **negrita** en <b>
+    response_text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', response_text)
+
+    # Convertir texto en *itálica* en <i>
+    response_text = re.sub(r'\*(.+?)\*', r'<i>\1</i>', response_text)
+
+    # Reemplazar saltos de línea por <br> (opcional, según el caso)
     response_text = response_text.replace('\n', '<br>')
 
     return response_text
