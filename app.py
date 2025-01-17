@@ -116,6 +116,8 @@ def chat_api():
             assistant_response = assistant_response.replace("```python", "<pre><code>")
             assistant_response = assistant_response.replace("```", "</code></pre>")
 
+        assistant_response = format_response_as_html(assistant_response)
+
         # Guardar los mensajes del usuario y del asistente
         save_message(user_ip, "user", prompt)
         save_message(user_ip, "assistant", assistant_response)
@@ -125,6 +127,27 @@ def chat_api():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({"response": f"Error al conectarse con la API: {str(e)}", "user_ip": user_ip})
+
+def format_response_as_html(response_text):
+    """
+    Convierte Markdown o texto estructurado en HTML para el frontend.
+    """
+    import re
+
+    # Convertir encabezados de nivel 3 (###) en etiquetas <h3>
+    response_text = re.sub(r'### (.+)', r'<h3>\1</h3>', response_text)
+
+    # Convertir listas numeradas (1., 2., etc.) en <ol> y <li>
+    response_text = re.sub(r'(\d+)\.\s(.+)', r'<li>\2</li>', response_text)
+    response_text = re.sub(r'(<li>.*?</li>)', r'<ol>\1</ol>', response_text, flags=re.DOTALL)
+
+    # Convertir texto en **negrita** y *itálica*
+    response_text = response_text.replace('**', '<b>').replace('*', '<i>')
+
+    # Reemplazar saltos de línea por <br> (opcional)
+    response_text = response_text.replace('\n', '<br>')
+
+    return response_text
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
