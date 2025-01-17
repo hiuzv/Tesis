@@ -121,7 +121,7 @@ def chat_api():
 
         # Guardar los mensajes del usuario y del asistente
         save_message(user_ip, nombre_usuario, "user", prompt)
-        save_message(user_ip, nombre_usuario "assistant", assistant_response)
+        save_message(user_ip, nombre_usuario, "assistant", assistant_response)
 
         return jsonify({"response": assistant_response, "user_ip": user_ip})
 
