@@ -63,10 +63,10 @@ def get_user_history(user_ip):
     return [{"role": row[0], "content": row[1]} for row in history]
 
 # Función para guardar el historial
-def save_message(user_ip, role, message):
+def save_message(user_ip, nombre_usuario, role, message):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO chat_history_ip (user_id, role, message) VALUES (%s, %s, %s)', (user_ip, role, message))
+    cursor.execute('INSERT INTO chat_history_ip (user_id, role, message, nombre_usuario) VALUES (%s, %s, %s, %s)', (user_ip, role, message, nombre_usuario))
     conn.commit()
     conn.close()
 
@@ -81,6 +81,7 @@ def chat_api():
     # Recupera el user_ip, si no existe uno, genera uno nuevo
     user_ip = request.remote_addr
     prompt = data.get("prompt").lower()
+    nombre_usuario = data.get("nombre_usuario", "Usuario Anónimo")
 
     try:
         # Contexto de la búsqueda en la web
@@ -119,8 +120,8 @@ def chat_api():
         assistant_response = format_response_as_html(assistant_response)
 
         # Guardar los mensajes del usuario y del asistente
-        save_message(user_ip, "user", prompt)
-        save_message(user_ip, "assistant", assistant_response)
+        save_message(user_ip, nombre_usuario, "user", prompt)
+        save_message(user_ip, nombre_usuario "assistant", assistant_response)
 
         return jsonify({"response": assistant_response, "user_ip": user_ip})
 
