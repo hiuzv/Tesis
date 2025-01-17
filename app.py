@@ -49,7 +49,7 @@ def get_db_connection():
 def save_feedback(user_ip, feedback):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO user_feedback (user_ip, feedback) VALUES (%s, %s)', (user_ip, feedback))
+    cursor.execute('INSERT INTO user_feedback (user_ip, feedback, message_id) VALUES (%s, %s, %s)', (user_ip, feedback, message_id))
     conn.commit()
     conn.close()
 
@@ -167,9 +167,10 @@ def feedback():
     data = request.get_json()
     feedback = data.get('feedback')  # 'like' o 'dislike'
     user_ip = request.remote_addr
+    message_id = data.get('message_id')
 
     try:
-        save_feedback(user_ip, feedback)
+        save_feedback(user_ip, feedback, message_id)
         return jsonify({"status": "success", "message": "Feedback saved"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
