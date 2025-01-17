@@ -111,6 +111,11 @@ def chat_api():
 
         assistant_response = response['choices'][0]['message']['content']
 
+        # Asegurarte de que el código esté encerrado en <pre><code> y </code></pre>
+        if "```" in assistant_response:  # Si el asistente genera un bloque de código Markdown
+            assistant_response = assistant_response.replace("```python", "<pre><code>")
+            assistant_response = assistant_response.replace("```", "</code></pre>")
+
         # Guardar los mensajes del usuario y del asistente
         save_message(user_ip, "user", prompt)
         save_message(user_ip, "assistant", assistant_response)
