@@ -122,10 +122,15 @@ def chat_api():
         assistant_response = format_response_as_html(assistant_response)
 
         # Guardar los mensajes del usuario y del asistente
-        save_message(user_ip, nombre_usuario, "user", prompt)
-        save_message(user_ip, nombre_usuario, "assistant", assistant_response)
+        user_message_id = save_message(user_ip, nombre_usuario, "user", prompt)
+        assistant_message_id = save_message(user_ip, nombre_usuario, "assistant", assistant_response)
 
-        return jsonify({"response": assistant_response, "user_ip": user_ip})
+        return jsonify({
+            "response": assistant_response,
+            "user_ip": user_ip,
+            "user_message_id": user_message_id,
+            "assistant_message_id": assistant_message_id
+        })
 
     except Exception as e:
         print(f"Error: {str(e)}")
