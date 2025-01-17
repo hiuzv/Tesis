@@ -66,7 +66,14 @@ def get_user_history(user_ip):
 def save_message(user_ip, nombre_usuario, role, message):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO chat_history_ip (user_id, role, message, nombre_usuario) VALUES (%s, %s, %s, %s)', (user_ip, role, message, nombre_usuario))
+    cursor.execute(
+            '''
+            INSERT INTO chat_history_ip (user_id, role, message, nombre_usuario)
+            VALUES (%s, %s, %s, %s)
+            RETURNING message_id
+            ''',
+            (user_ip, role, message, nombre_usuario)
+        )
     message_id = cursor.fetchone()[0]
     conn.commit()
     conn.close()
