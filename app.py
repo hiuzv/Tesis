@@ -138,11 +138,15 @@ def format_response_as_html(response_text):
     # Convertir encabezados de nivel 3 (###) en etiquetas <h3>
     response_text = re.sub(r'### (.+)', r'<h3>\1</h3>', response_text)
 
-    # Convertir listas numeradas en <ol> y <li>
+    # Convertir listas numeradas en <ul> y <li>, eliminando los números
     def replace_numbered_list(match):
         items = match.group(0).split('\n')
-        items = [f"<li>{item[2:].strip()}</li>" for item in items if item.strip()]
-        return f"<ol>{''.join(items)}</ol>"
+        formatted_items = []
+        for item in items:
+            if item.strip():  # Ignorar líneas vacías
+                _, text = item.split('.', 1)
+                formatted_items.append(f"<li>{text.strip()}</li>")
+        return f"<ul>{''.join(formatted_items)}</ul>"
 
     response_text = re.sub(r'(\d+\.\s.+(\n|$))+', replace_numbered_list, response_text)
 
@@ -156,6 +160,7 @@ def format_response_as_html(response_text):
     response_text = response_text.replace('\n', '<br>')
 
     return response_text
+
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
