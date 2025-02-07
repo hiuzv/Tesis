@@ -57,7 +57,15 @@ def save_feedback(user_ip, feedback, message_id):
 def get_user_history(user_ip):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT role, message FROM chat_history_ip WHERE user_id = %s AND AND fecha >= NOW() - INTERVAL ''3 hours'' ORDER BY fecha DESC LIMIT 6', (user_ip,))
+    query = """
+    SELECT role, message 
+    FROM chat_history_ip 
+    WHERE user_id = %s 
+    AND timestamp >= NOW() - INTERVAL '3 hours' 
+    ORDER BY timestamp DESC 
+    LIMIT 6
+    """
+    cursor.execute(query, (user_ip,))
     history = cursor.fetchall()
     conn.close()
     return [{"role": row[0], "content": row[1]} for row in history]
