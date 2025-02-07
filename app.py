@@ -16,6 +16,10 @@ conversation_history = []
 def search_web(query):
     search_url = "https://api.bing.microsoft.com/v7.0/search"
     headers = {"Ocp-Apim-Subscription-Key": bing_api_key}
+
+    # Agregar contexto específico a la búsqueda
+    enhanced_query = f"{query} site:towardsdatascience.com OR site:kdnuggets.com OR site:datacamp.com OR site:analyticsvidhya.com OR site:medium.com"
+
     params = {"q": query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
     
     try:
