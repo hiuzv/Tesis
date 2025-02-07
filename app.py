@@ -61,7 +61,7 @@ def get_user_history(user_ip):
     SELECT role, message 
     FROM chat_history_ip 
     WHERE user_id = %s 
-    AND timestamp >= NOW() - INTERVAL '3 hours' 
+    AND fecha >= NOW() - INTERVAL '3 hours' 
     ORDER BY timestamp DESC 
     LIMIT 6
     """
