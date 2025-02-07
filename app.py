@@ -54,7 +54,7 @@ def save_feedback(user_ip, feedback, message_id):
     conn.close()
 
 # Función para recuperar el historial del usuario
-def get_user_history(user_ip):
+def get_user_history(user_ip,nombre_usuario):
     conn = get_db_connection()
     cursor = conn.cursor()
     query = """
@@ -107,7 +107,7 @@ def chat_api():
         gpt_prompt = f"Contexto de la búsqueda en la web: {web_data}. Pregunta del usuario: {prompt}"
                
         # Recuperar historial previo
-        conversation_history = get_user_history(user_ip)
+        conversation_history = get_user_history(user_ip, nombre_usuario)
 
         # Llamada a OpenAI
         response = openai.ChatCompletion.create(
