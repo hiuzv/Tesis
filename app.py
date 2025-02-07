@@ -61,11 +61,12 @@ def get_user_history(user_ip):
     SELECT role, message 
     FROM chat_history_ip 
     WHERE user_id = %s 
+    AND nombre_usuario = %s
     AND fecha >= NOW() - INTERVAL '3 hours' 
     ORDER BY fecha DESC 
     LIMIT 6
     """
-    cursor.execute(query, (user_ip,))
+    cursor.execute(query, (user_ip,nombre_usuario,))
     history = cursor.fetchall()
     conn.close()
     return [{"role": row[0], "content": row[1]} for row in history]
