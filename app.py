@@ -20,7 +20,7 @@ def search_web(query):
     # Agregar contexto específico a la búsqueda
     enhanced_query = f"{query} site:towardsdatascience.com OR site:kdnuggets.com OR site:datacamp.com OR site:analyticsvidhya.com OR site:medium.com"
 
-    params = {"q": query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
+    params = {"q": enhanced_query, "count": 3, "textDecorations": True, "textFormat": "HTML"}
     
     try:
         response = requests.get(search_url, headers=headers, params=params)
