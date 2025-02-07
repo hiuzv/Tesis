@@ -120,9 +120,10 @@ def chat_api():
                                                 "3. Si te piden generar o mejorar código, debes devolverlo estrictamente dentro de las etiquetas <pre><code> y </code></pre> para que se visualice correctamente en HTML.\n"
                                                 "4. Si te piden generar o mejorar código, debe ser estrictamente relacionado con un tema del curso.\n"
                                                 "5. Si te solicitan una mejora de código, asegúrate de mejorar el código proporcionado en lugar de generar un código completamente diferente.\n"
-                                                "6. Debes usar el contexto de la búsqueda en la web proporcionado para mejorar la calidad de tus respuestas.\n"
-                                                "7. No proporcionas respuestas si el contexto no está relacionado con minería de datos (ciencia de datos) y/o codigo en Python. En ese caso, menciona la restricción del curso.\n"
-                                                "8. Debes dar respuesta a la 'Pregunta del usuario', usando las reglas, el 'Contexto de la búsqueda en la web' y las preguntas y respues historial.\n\n"
+                                                "6. Analiza el contexto de la búsqueda en la web proporcionado, si es posible usalo para mejorar la calidad de tus respuestas.\n"
+                                                "7. Analiza el historial proporcionado, si es posible usalo para mejorar la calidad de tus respuestas.\n"
+                                                "8. No proporcionas respuestas si el contexto no está relacionado con minería de datos (ciencia de datos) y/o codigo en Python. En ese caso, menciona la restricción del curso.\n"
+                                                "9. Evita usar historial o contexto web que no sirva para la pregunta actual.\n"
                                                 "Sigue estas reglas al responder cada pregunta."}] + conversation_history + [
                 {"role": "user", "content": gpt_prompt}
             ]
