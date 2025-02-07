@@ -69,7 +69,30 @@ def get_user_history(user_ip,nombre_usuario):
     cursor.execute(query, (user_ip,nombre_usuario,))
     history = cursor.fetchall()
     conn.close()
-    return [{"role": row[0], "content": row[1]} for row in history]
+
+    # Separar preguntas y respuestas en pares
+    user_messages = []
+    assistant_messages = []
+
+    for row in history:
+        if row[0] == "user":
+            user_messages.append({"role": row[0], "content": row[1]})
+        else:
+            assistant_messages.append({"role": row[0], "content": row[1]})
+
+    # Invertir cada lista individualmente y luego fusionarlas en el orden correcto
+    user_messages.reverse()
+    assistant_messages.reverse()
+
+    # Intercalar las preguntas y respuestas correctamente
+    merged_history = []
+    for i in range(max(len(user_messages), len(assistant_messages))):
+        if i < len(user_messages):
+            merged_history.append(user_messages[i])  # Primero la pregunta
+        if i < len(assistant_messages):
+            merged_history.append(assistant_messages[i])  # Luego la respuesta
+
+    return merged_history
 
 # Función para guardar el historial
 def save_message(user_ip, nombre_usuario, role, message):
