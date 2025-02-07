@@ -62,7 +62,7 @@ def get_user_history(user_ip):
     FROM chat_history_ip 
     WHERE user_id = %s 
     AND fecha >= NOW() - INTERVAL '3 hours' 
-    ORDER BY timestamp DESC 
+    ORDER BY fecha DESC 
     LIMIT 6
     """
     cursor.execute(query, (user_ip,))
